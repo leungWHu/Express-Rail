@@ -1,60 +1,75 @@
-# Express-Rail Dataset
- 
-[English Version](README.en.md) 
+# Express-Rail Point Cloud Dataset
 
-## 🎈 1 简介
-1. 本数据集包含铁路轨道及其周围环境的点云数据，旨在为铁路检测、三维建模、数字化等研究领域提供支持。点云数据通过激光雷达设备采集，具有高质量的标签信息。
-2. 我们提供了流行基准方法在该数据集上的测试结果，以供大家参考，代码存放在`code_benchmark`目录中.
-3. 我们在文章中（暂未发表）提出了基于主动学习的弱监督方法，使用更少的标签获得更高的语义分割精度，代码存放在`code_paper`目录中。
+[中文版](README_cn.md)  
 
-## 🎈 2 数据集
+## 🎈 1. Introduction  
 
-### 2.1 数据格式 
-数据集采用 LAS 格式存储，文件夹结构如下：
+1. **Dataset Overview**:  
+   This dataset contains high-quality point cloud data of railway tracks and their surrounding environments. It aims to support research in fields such as railway inspection, 3D modeling, and digitalization. The data was collected using LiDAR sensors and includes high-precision labels.
+   
+2. **Benchmark Methods**:  
+   We provide benchmark results of popular methods evaluated on this dataset. The corresponding code is available in the `code_benchmark` directory.
+
+3. **Research Contribution**:  
+   In our paper (under review), we propose a weakly supervised method based on active learning. This method achieves higher semantic segmentation accuracy with significantly fewer labels. The relevant code is available in the `code_paper` directory.
+
+## 🎈 2. Dataset  
+
+### 2.1 Data Format  
+
+The dataset is stored in **LAS** format with the following folder structure:  
+
 ```bash
 /dataset-root
-├── README.md                 # 数据集说明文件
-├── /train                    # 点云数据存放目录
-│   ├── track_segment1.las    # 第一段铁路点云数据
-│   ├── track_segment2.las    # 第二段铁路点云数据
+├── README.md                 # Dataset description file
+├── /train                    # Directory for training data
+│   ├── track_segment1.las    # Point cloud of the first railway segment
+│   ├── track_segment2.las    # Point cloud of the second railway segment
 │   └── ...
-└── /test             
-    ├── track_segment1.las   # 第一段铁路点云数据
-    ├── track_segment2.las   # 第二段铁路点云数据
+└── /test                     # Directory for testing data
+    ├── track_segment1.las    
+    ├── track_segment2.las    
     └── ...
 ```
 
-### 2.2 标签类别
+### 2.2 Label Categories  
 
-| 标签号 | 中文名称      | 英文名称   | 解释                                                                 |
-|-------|--------------|------------|----------------------------------------------------------------------|
-| 0     | 铁路          | Rail       | 表示铁路轨道的钢轨部分。                                             |
-| 1     | 支撑结构      | Support    | 表示铁路相关的支撑结构，如电缆支架。                         |
-| 2     | 支柱          | Pillar     | 表示铁路沿线的支柱结构，如电线杆。                           |
-| 3     | 接触网      | Overhead Lines  | 表示位于铁路上方的电缆。                     |
-| 4     | 围栏/立面设施 | Fence      | 表示铁路周围的围栏、隔音板等立面设施。                               |
-| 5     | 轨道床        | Track Bed  | 表示支撑铁路轨道的道砟或道床结构。                                   |
-| 6     | 植被          | Vegetation | 表示铁路沿线的植被，如树木、灌木等。                                 |
-| 7     | 地面          | Ground     | 表示铁路周围的地面，包括平整路面和边坡。                             |
-| 8     | 未分类的点集合 | Others     | 表示未分类的点或不属于其他类别的点。                                 |
+The dataset includes the following labeled categories:  
+
+| Label ID | Name (CN)         | Name (EN)       | Description                                      |
+|---------|-------------------|-----------------|--------------------------------------------------|
+| 0       | 铁路              | Rail            | Steel rails of the railway track                 |
+| 1       | 支撑结构          | Support         | Supporting structures like cable brackets        |
+| 2       | 支柱              | Pillar          | Pillars along the railway, e.g., utility poles   |
+| 3       | 接触网            | Overhead Lines  | Overhead cables above the railway                |
+| 4       | 围栏/立面设施     | Fence           | Fences, sound barriers, and other vertical structures |
+| 5       | 轨道床            | Track Bed       | Ballast or subgrade structure supporting the track |
+| 6       | 植被              | Vegetation      | Vegetation along the railway, such as trees and shrubs |
+| 7       | 地面              | Ground          | Ground surfaces, including leveled roads and slopes |
+| 8       | 未分类的点集合     | Others          | Unclassified points or points not belonging to other categories |
 
 
-### 2.3 数据集概览
-我们提供了数据集的示例图片，以帮助快速了解数据内容：  
+
+### 2.3 Dataset Overview  
+
+We provide sample images from the dataset to give a quick overview of the data content:  
 
 ![dataset.png](dataset/dataset.png)  
 
-_图. 铁路点云数据部分展示_
+_Figure. Example of railway point cloud data._
 
+### 2.4 Download and Usage  
 
-### 2.4 下载并使用
-* **下载**：请进入 `dataset/README.md` 获取下载地址或下载方式。
-* **使用**：①使用本仓库中的代码，参考代码目录内的使用说明；②你也可根据个性化的任务，自己适配使用
+* **Download**: Please refer to `dataset/README.md` for download links or methods.
+* **Usage**:  
+  1. Use the provided code in this repository. Refer to the instructions in the code directories.  
+  2. Alternatively, adapt the dataset for your own tasks as needed.
 
-## 🎈 2 基准方法
+## 🎈 3. Benchmark Methods  
 
-### 2.1 实验结果
-我们在该数据集上进行了一些流行基准方法的测试，包括：`PointNet++`、`DGCNN`、`KPConv`、`RandLa-Net`。实验结果见下表：
+### 3.1 Experimental Results  
+
+We evaluated several popular methods on this dataset, including `PointNet++`, `DGCNN`, `KPConv`, and `RandLA-Net`. The results are summarized in the table below:
 
 | Method       | Rail | Support | Pillar | Overhead | Fence | Bed  | Veget. | Ground | Others | mIoU (%) | OA (%) |
 |--------------|------|---------|--------|----------|-------|------|--------|--------|--------|----------|--------|
@@ -64,34 +79,42 @@ _图. 铁路点云数据部分展示_
 | RandLA-Net   | 75.4 | 85.0    | 91.0   | 97.6     | 97.2  | 93.7 | 92.5   | 85.3   | 76.0   | 88.2     | 95.2   |
 | Transformer   |  |     |    |      |   |  |    |    |    |      |    |
 
-### 2.2 代码
-* **说明**：在进行基准方法的测试时，我们借助`Open3D-ML`库，将上述的4个方法集成到一个代码工程中。这样做的好处是，
-我们对所有方法使用了相同的代码预处理、数据输入策略、超参数设置等，保证了不同方法的结果具有公平的对比。
-* **使用**：请参考 `code_benchmark` 目录下的说明文档。
+### 3.2 Code  
 
-## 🎈 3 我们的方法
-### 3.1 实验结果
-与流行的弱监督方法对比，我们的方法仅仅使用约~0.1‰的标签啊，其精度最优，并且超过了一些全监督的方法。实验结果见下表：
+* **Details**:  
+  For benchmarking, we integrated the above methods into a unified codebase using the `Open3D-ML` library. This ensures consistent preprocessing, data input strategies, and hyperparameter settings across methods, allowing fair comparisons.  
 
-| Weak Supervision        | Rail | Support | Pillar | Overhead | Fence | Bed  | Veget. | Ground | Others | mIoU (%) | OA (%) |
-|---------------|------|---------|--------|----------|-------|------|--------|--------|--------|----------|--------|
-| SQN (0.1%)   | 55.8 | 60.8    | 71.1   | 92.1     | 93.3  | 89.6 | 88.0   | 76.4   | 61.1   | 76.4     | 91.6   |
-| SQN (1%)     | 71.2 | 69.9    | 78.6   | 92.3     | 93.7  | 93.1 | 90.7   | 82.4   | 68.9   | 82.3     | 94.1   |
-| PSD (1%)     | 83.5 | 84.0    | 89.1   | 97.7     | 96.5  | 94.8 | 92.2   | 83.2   | 76.9   | 88.6     | 95.6   |
-| OCOC (1pt)   | 83.0 | 86.4    | 88.0   | 97.8     | 97.0  | 93.3 | 92.7   | 79.6   | 76.9   | 88.3     | 94.9   |
-| **Ours (~0.1‰)** | **88.1** | **88.3**    | **92.2**   | **98.3**     | 96.9  | **95.5** | 92.1   | **85.4**   | **78.8**   | **90.6**     | **96.2**   |
+* **Usage**:  
+  Please refer to the documentation in the `code_benchmark` directory.
 
+## 🎈 4. Our Method  
 
-### 3.2 代码
-请参考 `code_paper` 目录下的说明文档。
+### 4.1 Experimental Results  
 
+Compared to popular weakly supervised methods, our method uses approximately **0.1‰** of labeled data and achieves superior accuracy, even outperforming some fully supervised approaches. The results are shown below:
 
-## 🤝 许可
-本数据集允许用于学术研究和非商业用途。使用本数据集时，请引用以下文献：
-> 作者名，论文题目，发表期刊/会议，年份。
+| Weak Supervision   | Rail | Support | Pillar | Overhead | Fence | Bed  | Veget. | Ground | Others | mIoU (%) | OA (%) |
+|--------------------|------|---------|--------|----------|-------|------|--------|--------|--------|----------|--------|
+| SQN (0.1%)         | 55.8 | 60.8    | 71.1   | 92.1     | 93.3  | 89.6 | 88.0   | 76.4   | 61.1   | 76.4     | 91.6   |
+| SQN (1%)           | 71.2 | 69.9    | 78.6   | 92.3     | 93.7  | 93.1 | 90.7   | 82.4   | 68.9   | 82.3     | 94.1   |
+| PSD (1%)           | 83.5 | 84.0    | 89.1   | 97.7     | 96.5  | 94.8 | 92.2   | 83.2   | 76.9   | 88.6     | 95.6   |
+| OCOC (1pt)         | 83.0 | 86.4    | 88.0   | 97.8     | 97.0  | 93.3 | 92.7   | 79.6   | 76.9   | 88.3     | 94.9   |
+| **Ours (~0.1‰)**   | **88.1** | **88.3** | **92.2** | **98.3** | 96.9  | **95.5** | 92.1 | **85.4** | **78.8** | **90.6** | **96.2** |
 
-## 🤝 联系方式
-如有任何问题或建议，请联系数据集维护者：
+### 4.2 Code  
 
-姓名：leung
-邮箱：gisleung@whu.edu.cn
+Please refer to the documentation in the `code_paper` directory.
+
+## 🤝 License  
+
+This dataset is available for academic research and non-commercial use. Please cite the following paper when using this dataset:  
+
+> Author Name, Paper Title, Published Journal/Conference, Year.  
+
+## 🤝 Contact  
+
+For any questions or suggestions, please contact the dataset maintainers:  
+
+Name: Leung  
+Email: gisleung@whu.edu.cn  
+

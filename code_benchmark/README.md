@@ -1,54 +1,57 @@
-# 对ExpressRail数据集进行基准方法测试
+# Benchmark Methods
 
-## 介绍
-* 在进行基准方法的测试时，我们借助 [Open3D-ML](https://github.com/isl-org/Open3D-ML) 库，将流行的基准方法集成到一个代码工程
-* 这样做的好处是，所有方法使用了相同的数据预处理、输入策略、超参数设置等，保证了公平对比
-* 请注意：代码还没经过严格的整理，我们将在近期重新上传可读性更强的代码。欢迎您关注！
+[Chinese Version](README_cn.md)
 
-## 1 安装运行环境
-我们参考 Open3D-ML 的使用说明，最终的运行环境为：
-* Pytorch=2.0.0
-* Pytorch-cuda=11.7
-* Python=3.10
-* Open3d=0.18.0
+## Introduction
+* When testing benchmark methods, we leverage the [Open3D-ML](https://github.com/isl-org/Open3D-ML) library to integrate common benchmark methods into a unified code framework.
+* The benefit of this approach is that all methods use the same data preprocessing, input strategies, and hyperparameter settings, ensuring a fair comparison.
+* **Please note:**  The code has not been fully organized yet. We will upload a more standardized and readable version in the near future. Stay tuned!
 
-创建Python虚拟环境是，我们遵循以下步骤：
+## 1 Install the Runtime Environment
+We have referred to the Open3D-ML usage documentation, and the final configured runtime environment is as follows:
+* Pytorch = 2.0.0
+* Pytorch-cuda = 11.7
+* Python = 3.10
+* Open3d = 0.18.0
+
+When creating the Python virtual environment, follow these steps:
 ```bash
-# 创建虚拟
+# Create virtual environment
 conda create -n py310_open3d-ml python=3.10
 conda activate py310_open3d-ml
 
-# 按需安装代码运行时的依赖，您可以在调试时，根据程序提示按需安装。
+# Install required dependencies for code execution. You can install additional dependencies based on program prompts.
 conda install ...
 
-# 测试open3d安装成功
+# Test if Open3D is installed correctly
 pip install open3d
 python -c "import open3d.ml.torch as ml3d"
 ```
 
+## 2 Railway Point Cloud Data Preprocessing
+Before using the data in the dataset for formal training, we perform chunking on each scene.  
+The goal of chunking is to control the number of points per chunk to approximately 100,000, instead of simply dividing the point cloud using a uniform size.  
+The preprocessing code is located at [prepare_ExpressRail.py](code_benchmark/dataset/ExpressRail/prepare/prepare_ExpressRail.py), and the processing logic includes the following steps:
+1. Read each railway point cloud data file.
+2. Perform down-sampling on the point cloud data according to the desired grid size (e.g., grid_size=0.05m).
+3. Rotate the scene point cloud to a horizontal position automatically.
+4. Chunk the data first along the track direction, and then along the vertical direction based on the expected number of points and chunk size.
+5. Save each chunk’s data as the basic unit input for the network.
 
-## 2 铁路点云前期预处理
-我们在使用数据集中的数据正式训练网络之前，对每个场景进行了分块处理。  
-分块目标是希望控制每个分块内的点云数量约为100000，而不是暴力的直接按照统一尺寸裁剪。  
-预处理代码是 [prepare_ExpressRail.py](code_benchmark/dataset/ExpressRail/prepare/prepare_ExpressRail.py)。
-预处理逻辑遵循以下步骤：
-1. 逐文件读取每个铁路点云数据
-2. 根据期望的下采样目标，如 grid_size=0.05m，对点云进行一次抽稀
-3. 接着将场景点云旋转至水平方向。这是一个自动过程。
-4. 根据期望的分段长度和点数量，先进行轨道方向按长度分块，然后进行垂直方向按数量分块。
-5. 保存每个分块的数据，作为输入网络的基本单位。
+## 3 Configuration Files
+For the benchmark testing of the ExpressRail dataset, the configuration files are located in the `code_benchmark/dataset/ExpressRail` directory.  
+These configuration files include `*.yaml` files tailored for different methods.
 
-
-## 3 配置文件
-
-对于在ExpressRail数据集上的基准测试，其配置文件在`code_benchmark/dataset/ExpressRai`目录下，
-包括用于不同方法的`*.yaml`配置文件。
-
-## 4 运行代码
-1. 训练。根据实际情况修改`config_randla.yaml`中的参数
+## 4 Running the Code
+1. **Training**:   
+ Adjust the parameters in the `config_{model}.yaml` configuration file as needed, then run the following command:
 ```bash
-python train_Fit_PointNet2.py
+python train_Fit_PointNet2.py --data=ExpressRail
 ```
-
-2. 测试。只需要修改`train_Fit_{Model}.py`中的 run_mode='test'后，运行 `python train_Fit_PointNet2.py` ，即是测试模式。
+2. **Test**:  
+Change `run_mode='test'` in the `train_Fit_{model}.py` script to enable testing mode,  
+and modify the `test_ckpt_path: path/to/your/checkpoint/*.pth` in the `config_{model}.yaml` file to point to the appropriate checkpoint file.  
+Then run the following command:
+```bash
+python train_Fit_PointNet2.py --data=ExpressRail
 
