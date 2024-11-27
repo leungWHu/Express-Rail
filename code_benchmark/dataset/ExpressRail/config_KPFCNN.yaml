@@ -1,0 +1,103 @@
+dataset:
+  name: ExpressRail
+  down_sample: 0.05
+  dataset_path: data/Express-Rail/Open3d_deal/grid_$down_sample$/ # 下采样后的数据集路径 其中$down_sample$替换为0.03 0.05 0.07
+  train_file_names: data/Express-Rail/V1.0/train_file_names.txt
+  test_file_names: data/Express-Rail/V1.0/test_file_names.txt
+  val_file_names: data/Express-Rail/V1.0/test_file_names.txt
+  use_cache: True
+  sampler:
+    name: 'SemSegRandomSampler'  # 是否需要对数据进行特殊采样
+model:
+  name: KPFCNN
+  ckpt_path: # path/to/your/checkpoint
+  KP_extent: 1.2
+  KP_influence: linear
+  aggregation_mode: sum
+  architecture:
+  - simple
+  - resnetb
+  - resnetb_strided
+  - resnetb
+  - resnetb
+  - resnetb_strided
+  - resnetb
+  - resnetb
+  - resnetb_strided
+  - resnetb
+  - resnetb
+  - resnetb_strided
+  - resnetb
+  - nearest_upsample
+  - unary
+  - nearest_upsample
+  - unary
+  - nearest_upsample
+  - unary
+  - nearest_upsample
+  - unary
+  augment_color: 0.8
+  augment_noise: 0.001
+  augment_rotation: vertical
+  augment_scale_anisotropic: true
+  augment_scale_max: 1.2
+  augment_scale_min: 0.8
+  augment_symmetries:
+  - true
+  - false
+  - false
+  batch_norm_momentum: 0.98
+  batcher: ConcatBatcher
+  conv_radius: 2.5
+  first_subsampling_dl: 0.05
+  deform_fitting_mode: point2point
+  deform_fitting_power: 1.0
+  deform_radius: 6.0
+  density_parameter: 5.0
+  first_features_dim: 128
+  fixed_kernel_points: center
+  ignored_label_inds: []
+  in_features_dim: 2  # 输入特征维度（使用反射率、输入高度或所有坐标）
+  in_points_dim: 3  # 输入点的维度（2D或3D）
+  in_radius: 5.0
+  lbl_values: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  batch_limit: 150000  # TODO 120000(12G) 150000(24G)
+  max_in_points: 40000  # batch_limit/batch_size
+  min_in_points: 1  # 从分块采集数据时，影响了每个分块的要采集几次。设置一个很小的值=1,每个场景采集1次
+  modulated: false
+  num_classes: 9
+  num_kernel_points: 15
+  num_layers: 5
+  repulse_extent: 1.2
+  use_batch_norm: true
+  t_normalize:
+    recentering: [0, 1]
+pipeline:
+  exp: debug # deg
+  name: SemanticSegmentation
+  main_log_dir: ./logs_kpc
+
+  max_epoch: 200
+  batch_size: 4 # TODO 2(3060) 4（A30）
+  test_batch_size: 1
+  val_batch_size: 1
+  num_workers: 0  # 0(3060) 16（A30）只能设置为0,其他会报错
+  pin_memory: False
+
+  adam_lr: 0.01
+  learning_rate: 0.01
+  lr_decays: 0.98477
+  deform_lr_factor: 0.1
+  momentum: 0.98
+  save_ckpt_freq: 3
+  scheduler_gamma: 0.98477
+  train_sum_dir:
+  weight_decay: 0.001
+  summary:
+    record_for: []
+    max_pts:
+    use_reference: false
+    max_outputs: 1
+
+  test_ckpt_path: logs_kpc/0820-1640_ExpressRail_done-A/checkpoint/ckpt_best_oa.pth
+  output_test: True  # 是后输出测试结果

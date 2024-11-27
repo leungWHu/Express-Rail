@@ -1,0 +1,52 @@
+dataset:
+  name: ExpressRail
+  down_sample: 0.05
+  dataset_path: data/Express-Rail/Open3d_deal/grid_$down_sample$/ # 下采样后的数据集路径 其中$down_sample$替换为0.03 0.05 0.07
+  train_file_names: data/Express-Rail/V1.0/train_file_names.txt
+  test_file_names: data/Express-Rail/V1.0/test_file_names.txt
+  val_file_names: data/Express-Rail/V1.0/test_file_names.txt
+  use_cache: False  # True | False
+  class_weights: # 从info中获取
+  sampler:
+    name: 'SemSegRandomSampler'  # 是否需要对数据进行特殊采样
+model:
+  name: DGCNN
+  batcher: DefaultBatcher
+  ckpt_path: # path/to/your/checkpoint/*.pth
+  num_neighbors: 20
+  num_points: 16384  # 45056(11) 57344(14) 65536(16) 4096*4=16384(4 for 24G)
+  num_classes: 9
+  ignored_label_inds: []
+  in_channels: 3
+  dim_features: 8
+  emb_dims: 1024  # Dimension of embeddings
+  dropout: 0.5
+  grid_size: 0.05
+  augment:  # 数据增强
+    recenter:
+      dim: [0, 1]
+pipeline:
+  exp:  # debug
+  max_epoch: 300  # 100 | 300
+  batch_size: 1  # TODO 4(3060) 8（A30）
+  val_batch_size: 1
+  test_batch_size: 8
+  num_workers: 0  # TODO 0(3060)  16(A30)
+  name: SemanticSegmentation
+  save_ckpt_freq: 5
+  momentum: 0.9
+  optimizer:
+    lr: 0.001
+    weight_decay: 0.0001
+  scheduler_gamma: 0.9886
+  main_log_dir: ./logs_dgcnn
+  train_sum_dir:  # 如果为空，则将board日志保存在main_log_dir下
+  summary:
+    record_for: []
+    max_pts:
+    use_reference: false
+    max_outputs: 1
+  # 测试模式，test_result_folder
+  test_result_folder:  #  计算为 test_ckpt_path.split("/checkpoint/")[0]
+  test_ckpt_path: logs_pointnet2/0820-1701_ExpressRail_done/checkpoint/ckpt_best_iou.pth # path/to/your/checkpoint/*.pth
+  output_test: True  # 是后输出测试结果
