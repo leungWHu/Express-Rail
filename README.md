@@ -11,7 +11,7 @@
    We provide benchmark results of popular methods evaluated on this dataset. The corresponding code is available in the `code_benchmark` directory.
 
 3. **Research Contribution**:  
-   In our paper (under review), we propose a weakly supervised method based on active learning. This method achieves higher semantic segmentation accuracy with significantly fewer labels. The relevant code is available in the `code_paper` directory.
+   In our [paper](https://doi.org/10.1016/j.autcon.2025.106016), we propose a weakly supervised method based on active learning. This method achieves higher semantic segmentation accuracy with significantly fewer labels. The relevant code is available in the `code_paper` directory.
 
 ## 🎈 2. Dataset  
 
@@ -109,7 +109,17 @@ Please refer to the documentation in the `code_paper` directory.
 
 This dataset is available for academic research and non-commercial use. Please cite the following paper when using this dataset:  
 
-> Author Name, Paper Title, Published Journal/Conference, Year.  
+> @article{LIANG2025106016,
+title = {Active learning-driven semantic segmentation for railway point clouds with limited labels},
+journal = {Automation in Construction},
+volume = {171},
+pages = {106016},
+year = {2025},
+issn = {0926-5805},
+doi = {https://doi.org/10.1016/j.autcon.2025.106016},
+url = {https://www.sciencedirect.com/science/article/pii/S0926580525000561},
+author = {Zhuanxin Liang and Xudong Lai and Liang Zhang},
+} 
 
 ## 🤝 Contact  
 
